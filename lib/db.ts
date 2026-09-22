@@ -1,10 +1,13 @@
 import { DatabaseSync } from "node:sqlite";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
+import { mkdirSync } from "node:fs";
 import bcrypt from "bcryptjs";
 import { DEPARTMENTS, ENV_ENGINEERING_SUBJECTS } from "@/data/curriculum";
 
-const DB_PATH = path.join(process.cwd(), "data", "lambertiq.db");
+// Vercel serverless FS is read-only except /tmp; locally use data/lambertiq.db
+const DB_PATH = process.env.DB_PATH ||
+  (process.env.VERCEL ? "/tmp/lambertiq.db" : path.join(process.cwd(), "data", "lambertiq.db"));
 let db: DatabaseSync | null = null;
 let seeded = false;
 
@@ -16,6 +19,7 @@ export interface UserRow {
 
 export function getDb(): DatabaseSync {
   if (!db) {
+    try { mkdirSync(path.dirname(DB_PATH), { recursive: true }); } catch { /* ignored */ }
     db = new DatabaseSync(DB_PATH);
     try { db.exec("PRAGMA journal_mode = WAL;"); } catch { /* ignored */ }
     migrate(db);
