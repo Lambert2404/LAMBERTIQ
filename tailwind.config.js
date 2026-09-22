@@ -1,0 +1,16 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          50: "#eef6ff", 100: "#d9ebff", 200: "#b0d4ff", 300: "#7db6ff",
+          400: "#4a90ff", 500: "#2563eb", 600: "#1d4ed8", 700: "#1e40af",
+          800: "#1e3a8a", 900: "#172554", 950: "#0b1530"
+        }
+      }
+    }
+  },
+  plugins: []
+};
