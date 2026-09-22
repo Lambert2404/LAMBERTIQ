@@ -2,6 +2,8 @@
 
 **Learn Smarter. Think Better. Achieve More.**
 
+🟢 **Live:** https://lambertiq.vercel.app · **Repo:** https://github.com/Lambert2404/LAMBERTIQ
+
 Real Multi-AI Academic Learning Platform — Next.js 14, TypeScript, Node 24 built-in SQLite (zero native deps). English + Kiswahili. Environmental Engineering focus.
 
 ## Architecture
@@ -21,7 +23,7 @@ Demo accounts (seeded on first run):
 - Admin:  `admin@lambertiq.education` / `admin123`  (change via `ADMIN_PASSWORD`)
 
 ## Features built
-- **Multi-AI engine** (`lib/ai/`) — 6 provider adapters, extension point `registerProvider()`, quota-aware router (1 model simple, 2–4 complex/important), fallback Gemini→Groq→OpenRouter→Mistral/HF, synthesizer (agreements/contradictions/uncertainty; never majority-wins; document-priority).
+- **Multi-AI engine** (`lib/ai/`) — 7 provider adapters (Gemini, Groq, OpenRouter, Mistral, HF, Cloudflare, **Microsoft Copilot/Azure OpenAI**), extension point `registerProvider()`, quota-aware router (1 model simple, 2–4 complex/important), fallback Gemini→Groq→OpenRouter→Mistral/HF, synthesizer (agreements/contradictions/uncertainty; never majority-wins; document-priority).
 - **Engineering Solver** (`lib/ai/calculator.ts`) — deterministic HRT/OLR/flow with Given→Formula→Substitution→Units→Answer→Explanation; `/api/calc`.
 - **Auth** — NextAuth credentials + bcrypt, register/login, middleware-protected pages, admin gating.
 - **Database** — `lib/db.ts` on `node:sqlite` (`data/lambertiq.db`). 20 tables incl. users, departments, subjects, topics, conversations, documents+chunks, ai_providers, ai_requests/responses, synthesized_answers, quizzes, quiz_attempts, study_progress, question_bank, system_settings. Auto-seeded with 12 departments, full Env Eng taxonomy, providers, question bank.
@@ -36,6 +38,9 @@ Demo accounts (seeded on first run):
 - `lib/engine.ts` — shared chat pipeline (`/api/chat` + document Q&A), usage logging
 - `lib/db.ts` — schema, seeding, CRUD; `lib/parsers.ts` — file extraction/chunking/retrieval
 - `data/curriculum.ts` — departments + Environmental Engineering taxonomy + recommendations
+
+## Deployed (Vercel)
+`https://lambertiq.vercel.app` — production env vars (`NEXTAUTH_URL`, `NEXTAUTH_SECRET`, demo passwords, and AI keys) are stored as **Vercel Secrets**, not in the repo. CI builds on Node 24 (`.github/workflows/ci.yml`). See `DEPLOYMENT.md` for GitHub Secrets / self-host.
 
 ## Safety
 Keys via env + server routes only; never sent to the browser. Friendly errors (no stacks/keys). Rate limiting + response caching + request dedup. Engineering answers always flagged for verification; no fabricated citations.
