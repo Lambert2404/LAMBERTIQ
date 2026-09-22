@@ -1,6 +1,6 @@
 import {
   CloudflareAdapter, GeminiAdapter, GroqAdapter,
-  HuggingFaceAdapter, MistralAdapter, OpenRouterAdapter
+  HuggingFaceAdapter, MicrosoftAdapter, MistralAdapter, OpenRouterAdapter
 } from "./providers/adapters";
 import type { AIProviderAdapter, ProviderConfig, ProviderResponse, ChatMessage } from "./types";
 
@@ -13,10 +13,11 @@ export const defaultProviderConfigs: ProviderConfig[] = [
   { id: "mistral",     model: process.env.MISTRAL_MODEL || "mistral-small-latest", enabled: true, priority: 4, freeTier: true, dailyLimit: 500, requestsUsed: 0 },
   { id: "huggingface", model: process.env.HF_MODEL || "mistralai/Mistral-7B-Instruct-v0.3", enabled: true, priority: 5, freeTier: true, dailyLimit: 1000, requestsUsed: 0 },
   { id: "cloudflare",  model: process.env.CF_MODEL || "@cf/meta/llama-3.1-8b-instruct", enabled: true, priority: 6, freeTier: true, dailyLimit: 10000, requestsUsed: 0 },
+  { id: "microsoft",   model: process.env.MS_COPILOT_MODEL || "gpt-4o", enabled: true, priority: 4, freeTier: false, dailyLimit: 500, requestsUsed: 0 },
 ];
 
 const adapters: Record<string, AIProviderAdapter> = {};
-for (const a of [new GeminiAdapter(), new GroqAdapter(), new OpenRouterAdapter(), new MistralAdapter(), new HuggingFaceAdapter(), new CloudflareAdapter()]) {
+for (const a of [new GeminiAdapter(), new GroqAdapter(), new OpenRouterAdapter(), new MistralAdapter(), new HuggingFaceAdapter(), new CloudflareAdapter(), new MicrosoftAdapter()]) {
   adapters[a.id] = a;
 }
 

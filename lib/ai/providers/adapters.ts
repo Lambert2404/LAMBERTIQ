@@ -116,3 +116,25 @@ export class CloudflareAdapter implements AIProviderAdapter {
     } catch (e: any) { return { model, answer: "", status: "error" as const, error: e.message }; }
   }
 }
+
+/**
+ * Microsoft Copilot / Azure OpenAI — OpenAI-compatible chat completions.
+ * Works with the Microsoft Copilot endpoint (api.githubcopilot.com/microsoft/v1)
+ * or any Azure OpenAI serverless deployment (set MS_COPILOT_ENDPOINT).
+ * Env: MS_COPILOT_API_KEY (+ optional MS_COPILOT_ENDPOINT, MS_COPILOT_MODEL)
+ */
+export class MicrosoftAdapter implements AIProviderAdapter {
+  readonly id = "microsoft";
+  readonly defaultModel = process.env.MS_COPILOT_MODEL || "gpt-4o";
+  isConfigured() { return !!process.env.MS_COPILOT_API_KEY; }
+  async complete(messages: ChatMessage[], opts?: { model?: string }) {
+    const model = opts?.model || this.defaultModel;
+    const endpoint = process.env.MS_COPILOT_ENDPOINT || "https://api.githubcopilot.com/microsoft/v1";
+    try {
+      const data = await postJSON(`${endpoint.replace(/\/$/, "")}/chat/completions`,
+        { Authorization: `Bearer ${process.env.MS_COPILOT_API_KEY}`, "X-GitHub-Api-Version": "2022-11-28" },
+        { model, messages });
+      return { model, answer: data?.choices?.[0]?.message?.content || "No response.", status: "ok" as const, tokensUsed: data?.usage?.total_tokens };
+    } catch (e: any) { return { model, answer: "", status: "error" as const, error: e.message }; }
+  }
+}

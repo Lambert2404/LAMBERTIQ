@@ -83,10 +83,15 @@ export function seed() {
     const seedProviders = [
       ["gemini", "gemini-1.5-flash", 1, true, 1500], ["groq", "llama-3.1-8b-instant", 2, true, 14400],
       ["openrouter", "meta-llama/llama-3.1-8b-instruct:free", 3, true, 200], ["mistral", "mistral-small-latest", 4, true, 500],
-      ["huggingface", "mistralai/Mistral-7B-Instruct-v0.3", 5, true, 1000], ["cloudflare", "@cf/meta/llama-3.1-8b-instruct", 6, true, 10000]
+      ["huggingface", "mistralai/Mistral-7B-Instruct-v0.3", 5, true, 1000], ["cloudflare", "@cf/meta/llama-3.1-8b-instruct", 6, true, 10000],
+      ["microsoft", "gpt-4o", 4, false, 500]
     ];
-    for (const [id, model, pr, free, lim] of seedProviders) {
-      d.prepare("INSERT INTO ai_providers(id,model,enabled,priority,free_tier,daily_limit) VALUES(?,?,1,?,?,?)").run(id, model, pr, free ? 1 : 0, lim);
+    for (const id of ["gemini", "groq", "openrouter", "mistral", "huggingface", "cloudflare", "microsoft"]) {
+      const row = scalar<{ id: string }>("SELECT id FROM ai_providers WHERE id=?", id);
+      if (!row) d.prepare("INSERT INTO ai_providers(id,model,enabled,priority,free_tier,daily_limit) VALUES(?,?,1,?,?,?)").run(id, "", 9, 1, 500);
+    }
+    for (const [id, model, prio, free, lim] of seedProviders) {
+      d.prepare("UPDATE ai_providers SET model=?, priority=?, free_tier=?, daily_limit=? WHERE id=?").run(model, prio, free ? 1 : 0, lim, id);
     }
   }
   if (count("question_bank") === 0) seedQuestionBank(d);
