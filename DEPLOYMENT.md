@@ -1,6 +1,6 @@
 # Deploying LAMBERTIQ
 
-LAMBERTIQ deploys to any Node 20+ host. Two supported options below. **Never store API keys in the repository** — always use environment variables / platform secrets.
+LAMBERTIQ deploys to any Node 22+ host (the database uses Node's built-in `node:sqlite`, stable in Node 24). Two supported options below. **Never store API keys in the repository** — always use environment variables / platform secrets.
 
 ## Option A — Vercel (recommended, free)
 
@@ -21,7 +21,7 @@ LAMBERTIQ deploys to any Node 20+ host. Two supported options below. **Never sto
 
 On your server:
 ```bash
-node --version  # 20+
+node --version  # 24.x recommended (22.5+ for experimental node:sqlite)
 npm ci
 npm run build
 NEXTAUTH_URL=https://your-domain npm run start -- -p 3000
